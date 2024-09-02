@@ -113,14 +113,73 @@ sudo apt install -y nodejs
 ```
 git clone https://github.com/ํYolwadee6509650070/my-strapi-project.git
 cd my-strapi-project
+cd my-strapi-project
 npm install
 ```
+
+### 4. Configuration
+
+I. **Environment Variables**
+  - เซ็ต environment
+   
+    ```
+    nano ~/my-strapi-project/my-strapi-project/config/server.js
+    ```
+  - Copy รหัสที่สร้างจากคำสั่ง Node.js มาใส่
+    ```
+    JWT_SECRET=YOURKEY
+    API_TOKEN_SALT=YOURKEY
+    TRANSFER_TOKEN_SALT=YOURKEY
+    ```
+
+  - สร้าง `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET` ด้วยคำสั่ง Node.js
+    
+    ```
+    node -e "console.log(require('crypto').randomBytes(16).toString('base64'));"
+    ```
+
+II. **Admin Configuration**
+   อัพเดท `config/admin.js` ตามด้านล่างนี้
+
+    ```
+    module.exports = ({ env }) => ({
+    auth: {
+    secret: env('AUTH_SECRET'),
+    },
+    apiToken: {
+    salt: env('API_TOKEN_SALT'),
+    },
+    transfer: {
+    token: {
+      salt: env('TRANSFER_TOKEN_SALT'),
+    },
+    },
+    flags: {
+    nps: env.bool('FLAG_NPS', true),
+    promoteEE: env.bool('FLAG_PROMOTE_EE', true),
+    },
+    });
+    ```
+
+III. **Server Configuration**:
+   อัพเดท `config/server.js` ด้วย app keys 
+
+    ```
+    module.exports = ({ env }) => ({
+    host: env('HOST', '0.0.0.0'),
+    port: env.int('PORT', 1337),
+    app: {
+    keys: env.array('APP_KEYS', ['YOURKEY1', 
+    'YOURKEY2']),
+    },
+    });
+    ```
 
 ### 4. รัน Strapi บนเครื่อง EC2
 
 ```
-npm run build
-npm run start
+NODE_ENV=production npm run build
+NODE_ENV=production npm run start
 ```
 
 ### 5. เข้าสู่หน้า Admin Panel
@@ -128,7 +187,11 @@ npm run start
 - เข้าถึง Strapi ผ่าน IP public ของ EC2 ที่ http://your-ec2-public-ip:1337/admin
 
 ## 🔒 Configuring Security Groups
-- ตรวจสอบให้แน่ใจว่า security group ในการตั้งค่า EC2 instance อนุญาตการรับส่งข้อมูลขาเข้าบนพอร์ตที่จำเป็น (เช่น 1337 สำหรับ Strapi, 22 สำหรับ SSH)
+- ตรวจสอบให้แน่ใจว่า security group ในการตั้งค่า EC2 instance อนุญาตการรับส่งข้อมูลขาเข้าบนพอร์ตที่จำเป็น 
+- **Port 22 (TCP):** For SSH access to the server.
+- **Port 80 (TCP):** For HTTP traffic.
+- **Port 443 (TCP):** For HTTPS traffic.
+- **Port 1337 (TCP):** For accessing the Strapi application.
 
 ## 📚 เรียนรู้เพิ่มเติม
 

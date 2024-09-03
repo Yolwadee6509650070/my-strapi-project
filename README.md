@@ -96,8 +96,9 @@ http://localhost:1337/admin/register
 
 ### 1. สร้าง EC2 Instance
 - เลือก Amazon Linux 2 หรือ Ubuntu เป็น AMI
-- เลือกประเภท instance (เช่น t2.micro สำหรับการทดสอบ)
-- กำหนดค่ากลุ่มความปลอดภัยเพื่ออนุญาต HTTP/HTTPS และพอร์ตที่ใช้โดย Strapi (ค่าเริ่มต้นคือ 1337)
+- เลือกประเภท instance (เช่น t2.midium สำหรับการทดสอบ)
+- ใส่ key pair 
+- ตั้งค่า network เพิ่มเติม โดยเพิ่มการอนุญาต HTTP/HTTPS/TCP (0.0.0.0) และพอร์ตที่ใช้โดย Strapi (ค่าเริ่มต้นคือ 1337)
 
 ### 2. ติดตั้ง Node.js, npm และ Git บน EC2
 
@@ -106,6 +107,7 @@ sudo apt update -y
 sudo apt install -y git
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt install -y nodejs
+sudo apt install npm -y
 ```
 
 ### 3. Clone Code จาก Git Repository และ ติดตั้ง Dependencies
@@ -139,7 +141,8 @@ I. **Environment Variables**
     ```
 
 II. **Admin Configuration**
-   อัพเดท `config/admin.js` ตามด้านล่างนี้
+   
+  - อัพเดท `config/admin.js` ตามด้านล่างนี้
 
     ```
     module.exports = ({ env }) => ({
@@ -161,8 +164,8 @@ II. **Admin Configuration**
     });
     ```
 
-III. **Server Configuration**:
-   อัพเดท `config/server.js` ด้วย app keys 
+III. **Server Configuration**
+   - อัพเดท `config/server.js` ด้วย app keys 
 
     ```
     module.exports = ({ env }) => ({
@@ -178,8 +181,8 @@ III. **Server Configuration**:
 ### 4. รัน Strapi บนเครื่อง EC2
 
 ```
-NODE_ENV=production npm run build
-NODE_ENV=production npm run start
+npm run build
+npm run start
 ```
 
 ### 5. เข้าสู่หน้า Admin Panel
@@ -188,10 +191,10 @@ NODE_ENV=production npm run start
 
 ## 🔒 Configuring Security Groups
 - ตรวจสอบให้แน่ใจว่า security group ในการตั้งค่า EC2 instance อนุญาตการรับส่งข้อมูลขาเข้าบนพอร์ตที่จำเป็น 
-- **Port 22 (TCP):** For SSH access to the server.
-- **Port 80 (TCP):** For HTTP traffic.
-- **Port 443 (TCP):** For HTTPS traffic.
-- **Port 1337 (TCP):** For accessing the Strapi application.
+- **Port 22 (TCP):** สำหรับ SSH access to the server.
+- **Port 80 (TCP):** สำหรับ HTTP traffic.
+- **Port 443 (TCP):** สำหรับ HTTPS traffic.
+- **Port 1337 (TCP):** สำหรับ accessing the Strapi application.
 
 ## 📚 เรียนรู้เพิ่มเติม
 

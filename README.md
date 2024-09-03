@@ -115,7 +115,6 @@ sudo apt install npm -y
 ```
 git clone https://github.com/ํYolwadee6509650070/my-strapi-project.git
 cd my-strapi-project
-cd my-strapi-project
 npm install
 ```
 

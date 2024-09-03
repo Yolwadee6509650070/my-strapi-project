@@ -174,12 +174,12 @@ III. **Server Configuration**
    - อัพเดท `config/server.js` ตามด้านล่างนี้
    - เซ็ต Admin
    
-    ```
+  ```
     nano ~/my-strapi-project/my-strapi-project/config/server.js
-    ```
+  ```
    - ด้วย APPKEY1, APPKEY2  ที่สร้างขึ้น
 
-    ```
+  ```
     module.exports = ({ env }) => ({
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
@@ -190,7 +190,7 @@ III. **Server Configuration**
     ]),
     },
     });
-    ```
+  ```
 
 ### 4. รัน Strapi บนเครื่อง EC2
 

@@ -113,7 +113,7 @@ sudo apt install npm -y
 ### 3. Clone Code จาก Git Repository และ ติดตั้ง Dependencies
 
 ```
-git clone https://github.com/ํYolwadee6509650070/my-strapi-project.git
+git clone https://github.com/Yolwadee6509650070/my-strapi-project.git
 cd my-strapi-project
 npm install
 ```
@@ -121,39 +121,46 @@ npm install
 ### 4. Configuration
 
 I. **Environment Variables**
+
+  - สร้าง `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET`, `APPKEY1`, `APPKEY2` ด้วยคำสั่ง Node.js
+    
+    ```
+    node -e "console.log(require('crypto').randomBytes(16).toString('base64'));"
+    ```
   - เซ็ต environment
    
     ```
-    nano ~/my-strapi-project/my-strapi-project/config/server.js
+    nano ~/my-strapi-project/.env
     ```
   - Copy รหัสที่สร้างจากคำสั่ง Node.js มาใส่
     ```
     JWT_SECRET=YOURKEY
     API_TOKEN_SALT=YOURKEY
     TRANSFER_TOKEN_SALT=YOURKEY
-    ```
-
-  - สร้าง `API_TOKEN_SALT`, `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET` ด้วยคำสั่ง Node.js
-    
-    ```
-    node -e "console.log(require('crypto').randomBytes(16).toString('base64'));"
+    ADMIN_JWT_SECRET=YOURKEY
     ```
 
 II. **Admin Configuration**
    
   - อัพเดท `config/admin.js` ตามด้านล่างนี้
+  - เซ็ต Admin
+   
+    ```
+    nano ~/my-strapi-project/my-strapi-project/config/admin.js
+    ```
+  - แทนค่า Yourkey ด้วย ADMIN_JWT_SECRET ที่สร้างขึ้น
 
     ```
     module.exports = ({ env }) => ({
     auth: {
-    secret: env('AUTH_SECRET'),
+    secret: env('ADMIN_JWT_SECRET','Yourkey'),
     },
     apiToken: {
     salt: env('API_TOKEN_SALT'),
     },
     transfer: {
     token: {
-      salt: env('TRANSFER_TOKEN_SALT'),
+    salt: env('TRANSFER_TOKEN_SALT'),
     },
     },
     flags: {
@@ -164,15 +171,23 @@ II. **Admin Configuration**
     ```
 
 III. **Server Configuration**
-   - อัพเดท `config/server.js` ด้วย app keys 
+   - อัพเดท `config/server.js` ตามด้านล่างนี้
+   - เซ็ต Admin
+   
+    ```
+    nano ~/my-strapi-project/my-strapi-project/config/server.js
+    ```
+   - ด้วย APPKEY1, APPKEY2  ที่สร้างขึ้น
 
     ```
     module.exports = ({ env }) => ({
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
     app: {
-    keys: env.array('APP_KEYS', ['YOURKEY1', 
-    'YOURKEY2']),
+    keys: env.array('APP_KEYS', [
+      'YourAppKey1',
+      'YourAppKey2'
+    ]),
     },
     });
     ```
